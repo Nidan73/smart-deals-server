@@ -26,7 +26,7 @@ async function run() {
 
     const myDB = client.db("smart-deals");
     const productsCollection = myDB.collection("products");
-
+    const bidsCollection = myDB.collection("bids");
     app.get("/products", async (req, res) => {
       const result = await productsCollection.find().toArray();
       res.send(result);
@@ -68,6 +68,31 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await productsCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    // bids apis
+
+    app.get("/bids", async (req, res) => {
+      const email = req.query.email;
+      const query = {};
+      if (email) {
+        query.buyer_email = email;
+      }
+      const result = await bidsCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    app.post("/bids", async (req, res) => {
+      const newBids = req.body;
+      const result = await bidsCollection.insertOne(newBids);
+      res.send(result);
+    });
+
+    app.delete("/bids", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bidsCollection.deleteOne(query);
       res.send(result);
     });
 
