@@ -55,15 +55,6 @@ async function run() {
         .toArray();
       res.send(result);
     });
-    app.get("/bids/byProduct/:productId", async (req, res) => {
-      const productId = req.params.productId;
-      const query = { product: productId };
-      const result = await bidsCollection
-        .find(query)
-        .sort({ bid_price: -1 })
-        .toArray();
-      res.send(result);
-    });
 
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
@@ -112,10 +103,21 @@ async function run() {
       if (email) {
         query.buyer_email = email;
       }
-      const result = await bidsCollection.find(query).toArray();
+      const result = await bidsCollection
+        .find(query)
+        .sort({ bid_price: -1 })
+        .toArray();
       res.send(result);
     });
-
+    app.get("/bids/byProduct/:productId", async (req, res) => {
+      const productId = req.params.productId;
+      const query = { product: productId };
+      const result = await bidsCollection
+        .find(query)
+        .sort({ bid_price: -1 })
+        .toArray();
+      res.send(result);
+    });
     app.post("/bids", async (req, res) => {
       const newBids = req.body;
       const result = await bidsCollection.insertOne(newBids);
