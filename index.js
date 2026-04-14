@@ -47,6 +47,14 @@ async function run() {
       const result = await productsCollection.find().toArray();
       res.send(result);
     });
+    app.get("/latest-products", async (req, res) => {
+      const result = await productsCollection
+        .find()
+        .sort({ created_at: -1 })
+        .limit(6)
+        .toArray();
+      res.send(result);
+    });
 
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
