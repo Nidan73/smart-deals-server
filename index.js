@@ -27,6 +27,22 @@ async function run() {
     const myDB = client.db("smart-deals");
     const productsCollection = myDB.collection("products");
     const bidsCollection = myDB.collection("bids");
+    const userCollection = myDB.collection("user");
+
+    // api for users
+
+    app.post("/user", async (req, res) => {
+      const newUser = req.body;
+      const query = { email: req.body.email };
+      const existinguser = await userCollection.findOne(query);
+      if (existinguser) {
+        res.send({ message: "user already exists" });
+      } else {
+        const result = await userCollection.insertOne(newUser);
+        res.send(result);
+      }
+    });
+
     app.get("/products", async (req, res) => {
       const result = await productsCollection.find().toArray();
       res.send(result);
