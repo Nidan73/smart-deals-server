@@ -55,6 +55,15 @@ async function run() {
         .toArray();
       res.send(result);
     });
+    app.get("/bids/byProduct/:productId", async (req, res) => {
+      const productId = req.params.productId;
+      const query = { product: productId };
+      const result = await bidsCollection
+        .find(query)
+        .sort({ bid_price: -1 })
+        .toArray();
+      res.send(result);
+    });
 
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
