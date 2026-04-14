@@ -47,6 +47,15 @@ async function run() {
       const result = await productsCollection.find().toArray();
       res.send(result);
     });
+    app.get("/myProducts", async (req, res) => {
+      const email = req.query.email;
+      const query = {};
+      if (email) {
+        query.email = email;
+      }
+      const result = await productsCollection.find(query).toArray();
+      res.send(result);
+    });
     app.get("/latest-products", async (req, res) => {
       const result = await productsCollection
         .find()
@@ -124,7 +133,7 @@ async function run() {
       res.send(result);
     });
 
-    app.delete("/bids", async (req, res) => {
+    app.delete("/bids/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await bidsCollection.deleteOne(query);
